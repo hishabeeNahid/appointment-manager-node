@@ -53,7 +53,7 @@ export const authorizeOwnAppointment = async (
   }
 
   // Import prisma here to avoid circular dependencies
-  const { PrismaClient } = await import("../../../generated/prisma");
+  const { PrismaClient } = await import("@prisma/client");
   const prisma = new PrismaClient();
 
   try {

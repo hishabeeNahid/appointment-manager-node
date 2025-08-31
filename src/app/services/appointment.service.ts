@@ -1,4 +1,4 @@
-import { AppointmentStatus } from "../../../generated/prisma";
+import { AppointmentStatus } from "@prisma/client";
 import ApiError from "../../errors/ApiError";
 import httpStatus from "http-status";
 import prisma from "../../shared/db";

@@ -1,6 +1,4 @@
-import { PrismaClient } from '../../../generated/prisma';
-
-const prisma = new PrismaClient();
+import prisma from "../../shared/db";
 
 const getDoctors = async (
   specialization?: string,
@@ -11,12 +9,12 @@ const getDoctors = async (
   const skip = (page - 1) * limit;
 
   const where: any = {
-    role: 'DOCTOR',
+    role: "DOCTOR",
     ...(specialization && { specialization }),
     ...(search && {
       OR: [
-        { name: { contains: search, mode: 'insensitive' } },
-        { specialization: { contains: search, mode: 'insensitive' } },
+        { name: { contains: search, mode: "insensitive" } },
+        { specialization: { contains: search, mode: "insensitive" } },
       ],
     }),
   };
@@ -32,7 +30,7 @@ const getDoctors = async (
         photo_url: true,
         createdAt: true,
       },
-      orderBy: { name: 'asc' },
+      orderBy: { name: "asc" },
       skip,
       take: limit,
     }),
@@ -55,7 +53,7 @@ const getPatients = async (page: number = 1, limit: number = 10) => {
 
   const [patients, total] = await Promise.all([
     prisma.user.findMany({
-      where: { role: 'PATIENT' },
+      where: { role: "PATIENT" },
       select: {
         id: true,
         name: true,
@@ -63,11 +61,11 @@ const getPatients = async (page: number = 1, limit: number = 10) => {
         photo_url: true,
         createdAt: true,
       },
-      orderBy: { name: 'asc' },
+      orderBy: { name: "asc" },
       skip,
       take: limit,
     }),
-    prisma.user.count({ where: { role: 'PATIENT' } }),
+    prisma.user.count({ where: { role: "PATIENT" } }),
   ]);
 
   return {
@@ -83,16 +81,16 @@ const getPatients = async (page: number = 1, limit: number = 10) => {
 
 const getSpecializations = async () => {
   const specializations = [
-    'Cardiology',
-    'Dermatology',
-    'Endocrinology',
-    'Gastroenterology',
-    'Neurology',
-    'Oncology',
-    'Orthopedics',
-    'Pediatrics',
-    'Psychiatry',
-    'Radiology',
+    "Cardiology",
+    "Dermatology",
+    "Endocrinology",
+    "Gastroenterology",
+    "Neurology",
+    "Oncology",
+    "Orthopedics",
+    "Pediatrics",
+    "Psychiatry",
+    "Radiology",
   ];
 
   return specializations;
