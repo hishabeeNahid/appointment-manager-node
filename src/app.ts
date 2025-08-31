@@ -6,6 +6,7 @@ import { rateLimit, validateOrigin } from "./app/middleware/authorization";
 import authRouter from "./app/router/auth.router";
 import userRouter from "./app/router/user.router";
 import appointmentRouter from "./app/router/appointment.router";
+import healthRouter from "./app/router/health.router";
 
 const app: Application = express();
 
@@ -43,6 +44,7 @@ app.use((req, res, next) => {
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1", userRouter);
 app.use("/api/v1/appointments", appointmentRouter);
+app.use("/api/v1", healthRouter);
 
 // using globalErrorHandler middleware to handle all the errors
 app.use(globalErrorHandler);
