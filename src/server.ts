@@ -1,14 +1,16 @@
-import { Server } from 'http';
-import { config } from './config';
-import app from './app';
-import { errorLogger, logger } from './shared/logger';
+import { Server } from "http";
+import { config } from "./config";
+import app from "./app";
+import { errorLogger, logger } from "./shared/logger";
+import prisma from "./shared/db";
+import SeedService from "./app/services/seed.service";
 
 let server: Server;
 
 // step 5: handle uncaught exceptions and shutdown the server gracefully
-process.on('uncaughtException', err => {
+process.on("uncaughtException", (err) => {
   errorLogger.error(err);
-  errorLogger.error('Shutting down the server due to Uncaught Exception');
+  errorLogger.error("Shutting down the server due to Uncaught Exception");
   process.exit(1);
 });
 
@@ -20,9 +22,12 @@ async function run_server() {
     });
 
     // step 2: connect to the database
-    // db.connect(config.db_host, config.db_port);
+    await prisma.$connect();
 
-    logger.info('Connected to  database');
+    logger.info("Connected to database");
+
+    // step 3: seed database with sample data
+    await SeedService.seedDatabase();
   } catch (err) {
     errorLogger.error(
       `'Error connecting to database' err=>${JSON.stringify(err)}`
@@ -31,10 +36,10 @@ async function run_server() {
   }
 
   // step 3: handle unhandled promise rejections
-  process.on('unhandledRejection', err => {
-    errorLogger.error(err);
+  process.on("unhandledRejection", (err) => {
+    errorLogger.error("Unhandled Promise Rejection:", err);
     errorLogger.error(
-      'Shutting down the server due to Unhandled Promise rejection'
+      "Shutting down the server due to Unhandled Promise rejection"
     );
     if (server) {
       server.close(() => {
@@ -47,11 +52,11 @@ async function run_server() {
 }
 
 // step 4: handle SIGTERM signal to gracefully shutdown the server
-process.on('SIGTERM', () => {
-  errorLogger.error('SIGTERM received, shutting down gracefully');
+process.on("SIGTERM", () => {
+  errorLogger.error("SIGTERM received, shutting down gracefully");
   if (server) {
     server.close(() => {
-      errorLogger.error('Process terminated');
+      errorLogger.error("Process terminated");
     });
   }
 });

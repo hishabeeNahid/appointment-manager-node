@@ -4,9 +4,9 @@ export type ISendResponse<T> = {
   success: boolean;
   data: T;
   meta?: {
+    page: number;
+    limit: number;
     total: number;
-    per_page: number;
-    current_page: number;
-    next_page_url: string | null;
+    totalPages: number;
   };
 };
