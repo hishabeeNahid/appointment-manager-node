@@ -12,7 +12,7 @@ const app: Application = express();
 
 // Security middleware
 app.use(validateOrigin(["*"])); // Allow all origins for now
-app.use(rateLimit(100, 15 * 60 * 1000)); // Global rate limiting: 100 requests per 15 minutes
+app.use(rateLimit(1000, 10 * 60 * 1000)); // Global rate limiting: 100 requests per 15 minutes
 
 // using cors to allow cross origin resource sharing
 app.use(
